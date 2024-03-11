@@ -2,9 +2,10 @@ package BOJ;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class Solve {
-    static int N, M, K, height, start;
+    static int N, M, K, start;
     static long[] arr, comp;
     public static void main(String[] args) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -15,8 +16,8 @@ public class Solve {
         M = Integer.parseInt(str[1]);
         K = Integer.parseInt(str[2]);
 
-        height = (int) Math.ceil(Math.log(N) / Math.log(2));
-        start = (int) Math.pow(2, height);
+        int height= (int)Math.ceil(Math.log(N) / Math.log(2));
+        start = (int)Math.pow(2, height);
 
         arr = new long[start * 2];
         comp = new long[start * 2];
@@ -53,8 +54,8 @@ public class Solve {
         e += start - 1;
         long cp = 1;
         while(s <= e){
-            if(s % 2 == 1) updateComp(s++, cp, val);
-            if(e % 2 == 0) updateComp(e--, cp, val);
+            if(s % 2 == 1) compUpdate(s++, val, cp);
+            if(e % 2 == 0) compUpdate(e--, val, cp);
             s /= 2;
             e /= 2;
             cp *= 2;
@@ -64,11 +65,11 @@ public class Solve {
     public static long sum(int s, int e){
         s += start - 1;
         e += start - 1;
-        long sum = 0;
         long cp = 1;
+        long sum = 0;
         while(s <= e){
-            if(s % 2 == 1) sum += getSum(s++, cp);
-            if(e % 2 == 0) sum += getSum(e--, cp);
+            if(s % 2 == 1) sum += compSum(s++, cp);
+            if(e % 2 == 0) sum += compSum(e--, cp);
             s /= 2;
             e /= 2;
             cp *= 2;
@@ -76,7 +77,7 @@ public class Solve {
         return sum;
     }
 
-    public static void updateComp(int idx, long cp, long val){
+    public static void compUpdate(int idx, long val, long cp){
         comp[idx] += val;
         idx /= 2;
         while(idx > 0){
@@ -85,7 +86,7 @@ public class Solve {
         }
     }
 
-    public static long getSum(int idx, long cp){
+    public static long compSum(int idx, long cp){
         long sum = arr[idx];
         while(idx > 0){
             sum += comp[idx] * cp;
